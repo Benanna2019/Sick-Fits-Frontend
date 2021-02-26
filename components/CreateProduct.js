@@ -1,5 +1,35 @@
+import { useMutation } from "@apollo/client";
+import { gql } from "graphql-tag";
 import useForm from "../lib/useForm";
 import Form from "./styles/Form";
+import DisplayError from "./ErrorMessage";
+import ALL_PRODUCTS_QUERY from "./Product";
+import Router from "next/router";
+
+const CREATE_PRODUCT_MUTATION = gql`
+	mutation CREATE_PRODUCT_MUTATION(
+		# Which variables are getting passed in? And what types are they?
+		$name: String!
+		$description: String!
+		$price: Int!
+		$image: Upload
+	) {
+		createProduct(
+			data: {
+				name: $name
+				description: $description
+				priced: $price
+				status: "AVAILABLE"
+				photo: { create: { image: $image, altText: $name } }
+			}
+		) {
+			id
+			price
+			description
+			name
+		}
+	}
+`;
 
 export default function CreateProduct() {
 	const { inputs, handleChange, resetForm, clearForm } = useForm({
@@ -9,14 +39,31 @@ export default function CreateProduct() {
 		description: "These are sick shoes",
 	});
 
+	const [createProduct, { loading, error, data }] = useMutation(
+		CREATE_PRODUCT_MUTATION,
+		{
+			variables: inputs,
+			refetchQueries: [{ query: ALL_PRODUCTS_QUERY }],
+		}
+	);
+	console.log(createProduct);
+
 	return (
 		<Form
-			onSubmit={(e) => {
+			onSubmit={async (e) => {
 				e.preventDefault();
-				console.log(inputs);
+				// Submit the input fields to the backend
+				const res = await createProduct();
+				clearForm();
+				// Go to the product page after product is created
+				Router.push({
+					pathname: `/product/${res.data.createProduct.id}`,
+					// you can add query parameters to the end of the url as well
+				});
 			}}
 		>
-			<fieldset>
+			<DisplayError error={error} />
+			<fieldset disabled={loading} aria-busy={loading}>
 				<label htmlFor="image">
 					Image:
 					<input
@@ -49,7 +96,7 @@ export default function CreateProduct() {
 						onChange={handleChange}
 					/>
 				</label>
-				<input htmlFor="description">
+				<label htmlFor="description">
 					Description:
 					<textarea
 						id="description"
@@ -58,7 +105,7 @@ export default function CreateProduct() {
 						value={inputs.description}
 						onChange={handleChange}
 					/>
-				</input>
+				</label>
 				<button type="submit">+ Add Product</button>
 			</fieldset>
 		</Form>
