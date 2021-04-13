@@ -1,0 +1,15 @@
+query GetPosts {
+	allPosts {
+		title
+		publishDate
+		content {
+			document
+		}
+		author {
+			name
+		}
+		tags {
+			name
+		}
+	}
+}
