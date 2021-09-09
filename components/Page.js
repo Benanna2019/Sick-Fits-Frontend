@@ -2,6 +2,7 @@ import styled, { createGlobalStyle } from "styled-components";
 import Header from "./Header";
 
 const GlobalStyles = createGlobalStyle`
+
   @font-face {
     font-family: 'radnika_next';
     src: url('/static/radnikanext-medium-webfont.woff2')
@@ -9,6 +10,15 @@ const GlobalStyles = createGlobalStyle`
     font-weight: normal; 
     font-style: normal; 
   }
+
+  body {
+    font-family: 'radnika_next', ---apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; 
+    padding: 0; 
+    margin: 0; 
+    font-size: 1.5rem; 
+    line-height: 2; 
+  }
+
   html {
     --red: #ff0000; 
     --black: #393939; 
@@ -27,14 +37,6 @@ const GlobalStyles = createGlobalStyle`
     box-sizing: inherit; 
   }
 
-  body {
-    font-family: 'radnika_next', ---apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; 
-    padding: 0; 
-    margin: 0; 
-    font-size: 1.5rem; 
-    line-height: 2; 
-  }
-
   a {
     text-decoration: none; 
     color: var(--black); 
@@ -50,17 +52,17 @@ const GlobalStyles = createGlobalStyle`
 `;
 
 const InnerStyles = styled.div`
-	max-width: var(--maxWidth);
-	margin: 0 auto;
-	padding: 2rem;
+  max-width: var(--maxWidth);
+  margin: 0 auto;
+  padding: 2rem;
 `;
 
 export default function Page({ children }) {
-	return (
-		<div>
-			<GlobalStyles />
-			<Header />
-			<InnerStyles>{children}</InnerStyles>
-		</div>
-	);
+  return (
+    <div>
+      <GlobalStyles />
+      <Header />
+      <InnerStyles>{children}</InnerStyles>
+    </div>
+  );
 }
