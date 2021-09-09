@@ -7,5 +7,5 @@ haters/
 layout.md
 variables.env
 *.env
-.evn.local
+.env.local
 .keystone
